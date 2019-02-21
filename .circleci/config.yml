@@ -1,0 +1,55 @@
+version: 2
+jobs: 
+  build: 
+    docker: 
+      - image: circleci/golang:1.11
+ 
+    environment:
+      TEST_RESULTS: /tmp/test-results
+
+    steps: 
+      - checkout
+      - run: mkdir -p $TEST_RESULTS
+
+      - restore_cache: 
+          keys:
+            - v1-pkg-cache
+      
+      - run: go get github.com/lib/pq
+      - run: go get github.com/mattes/migrate
+      - run: go get github.com/jstemmer/go-junit-report
+      - run: go mod download
+      - run: go build # pull and build dependencies for the project
+# pull and build dependencies for the project
+
+      - run:
+          name: Run unit tests
+          command: go test ./...
+
+      - save_cache: # Store cache in the /go/pkg directory
+          key: v1-pkg-cache
+          paths:
+            - "/go/pkg"
+
+      - run:
+          name: Start service
+          command: go run main.go
+          background: true # keep service running and proceed to next step
+
+      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: /tmp/test-results
+
+       - setup_remote_docker:
+           docker_layer_caching: true
+
+      TODO: need to pull docker-hub credentials safely from environment variables and then the docker image can be pushed up to dockerhub.
+       - run:
+           name: build and push container
+           command: |
+             docker build -t apostrophe/im-projects:LATEST -t apostrophe/im-projects:v0.0.1 .
+             echo $DOCKER_PWD | docker login -u $DOCKER_PWD -p $DOCKER_PWD
+             docker push apostrophe/im-projects:v0.0.1
