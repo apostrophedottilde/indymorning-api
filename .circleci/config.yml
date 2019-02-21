@@ -31,13 +31,21 @@ jobs:
           paths:
             - "/go/pkg"
 
+      - run:
+          name: Start service
+          command: go run main.go
+          background: true # keep service running and proceed to next step
+
+      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: /tmp/test-results
+          destination: raw-test-output
+
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: /tmp/test-results
 
        - setup_remote_docker:
            docker_layer_caching: true
 
-      TODO: need to pull docker-hub credentials safely from environment variables and then the docker image can be pushed up to dockerhub.
        - run:
            name: build and push container
            command: |
