@@ -9,7 +9,7 @@ jobs:
 
     steps: 
       - checkout
-      
+
       - run: mkdir -p $TEST_RESULTS
 
       - restore_cache: 
@@ -51,5 +51,5 @@ jobs:
            name: build and push container
            command: |
              docker build -t apostrophe/im-projects:LATEST -t apostrophe/im-projects:v0.0.1 .
-             echo $DOCKER_PWD | docker login -u $DOCKER_PWD -p $DOCKER_PWD
-             docker push apostrophe/im-projects:v0.0.1
+             echo $DOCKER_PWD | docker login -u $DOCKER_USER -p $DOCKER_PWD
+             docker push apostrophe/im-projects:LATEST
