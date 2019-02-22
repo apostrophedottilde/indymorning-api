@@ -12,7 +12,7 @@ type Project interface {
 }
 
 type GameProject struct {
-	ID              primitive.ObjectID `json:"id" bson:"_id"`
+	ID              primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name            string             `json:"name" bson:"name,omitempty"`
 	BriefSynopsis   string             `json:"value" bson:"value,omitempty"`
 	FullDescription string             `json:"briefSynopsis" bson:"briefSynopsis,omitempty"`

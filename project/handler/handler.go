@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/apostrohedottilde/indymorning/api/project/domain"
-
+	"github.com/apostrohedottilde/indymorning/api/project/dto/request"
 	s "github.com/apostrohedottilde/indymorning/api/project/service"
 )
 
@@ -31,11 +31,18 @@ func (rh *RequestHandler) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// TODO: extract this data from the request instead of stubbing
-		newProjectStub := domain.GameProject{
+		req := request.GameProject{
 			Name:            "Tokyo job hunter - adventure game",
 			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
 			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
 			Contributors:    []string{"user1", "user2", "user3"},
+		}
+
+		newProjectStub := domain.GameProject{
+			Name:            req.Name,
+			BriefSynopsis:   req.BriefSynopsis,
+			FullDescription: req.FullDescription,
+			Contributors:    req.Contributors,
 			State:           "LIVE",
 		}
 
@@ -81,14 +88,20 @@ func (rh *RequestHandler) Update(next http.Handler) http.Handler {
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		newProjectStub := domain.GameProject{
+		req := request.GameProject{
 			Name:            "Tokyo job hunter - adventure game",
 			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
 			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
 			Contributors:    []string{"user1", "user2", "user3"},
-			State:           "LIVE",
 		}
 
+		newProjectStub := domain.GameProject{
+			Name:            req.Name,
+			BriefSynopsis:   req.BriefSynopsis,
+			FullDescription: req.FullDescription,
+			Contributors:    req.Contributors,
+			State:           "LIVE",
+		}
 		res, err := rh.service.Update(id, newProjectStub)
 
 		if err != nil {

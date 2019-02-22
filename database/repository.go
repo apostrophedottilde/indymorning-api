@@ -26,7 +26,7 @@ type ProjectRepository struct {
 func (ps *ProjectRepository) Create(model domain.GameProject) (domain.GameProject, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-
+	
 	res, err := collection.InsertOne(ctx, model)
 	defer cancel()
 
@@ -158,7 +158,7 @@ func (ps *ProjectRepository) Delete(id string) error {
 }
 
 func New() *ProjectRepository {
-	mclient, err := mongo.Connect(context.TODO(), "mongodb://localhost:27017")
+	mclient, err := mongo.Connect(context.TODO(), "mongodb://mongodb:27017")
 
 	if err != nil {
 		fmt.Println("err mongo: ", err)
