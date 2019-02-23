@@ -1,14 +1,14 @@
 package provider
 
 import (
-	"github.com/apostrohedottilde/indymorning/api/database"
+	"github.com/apostrohedottilde/indymorning/api/project"
 )
 
 type Provider struct {
 }
 
-func (provider *Provider) ProjectRepository() *database.ProjectRepository {
-	return database.New()
+func (provider *Provider) ProjectRepository() *project.ProjectRepository {
+	return project.NewRepository()
 }
 
 func (provider *Provider) Close() {

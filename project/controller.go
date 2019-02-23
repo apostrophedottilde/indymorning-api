@@ -1,4 +1,4 @@
-package controller
+package project
 
 import (
 	"encoding/json"
@@ -6,10 +6,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/apostrohedottilde/indymorning/api/project/domain"
-	"github.com/apostrohedottilde/indymorning/api/project/dto/request"
-	s "github.com/apostrohedottilde/indymorning/api/project/service"
 )
 
 type ErrResponse struct {
@@ -18,21 +14,21 @@ type ErrResponse struct {
 }
 
 type ProjectController struct {
-	service s.Service
+	service Service
 }
 
 func (rh *ProjectController) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 		// TODO: extract this data from the request instead of stubbing
-		req := request.GameProject{
+		req := GameProjectRequest{
 			Name:            "Tokyo job hunter - adventure game",
 			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
 			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
 			Contributors:    []string{"user1", "user2", "user3"},
 		}
 
-		newProjectStub := domain.GameProject{
+		newProjectStub := GameProject{
 			Name:            req.Name,
 			BriefSynopsis:   req.BriefSynopsis,
 			FullDescription: req.FullDescription,
@@ -86,14 +82,14 @@ func (rh *ProjectController) Update(next http.Handler) http.Handler {
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		req := request.GameProject{
+		req := GameProjectRequest{
 			Name:            "Tokyo job hunter - adventure game",
 			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
 			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
 			Contributors:    []string{"user1", "user2", "user3"},
 		}
 
-		newProjectStub := domain.GameProject{
+		newProjectStub := GameProject{
 			Name:            req.Name,
 			BriefSynopsis:   req.BriefSynopsis,
 			FullDescription: req.FullDescription,
@@ -195,8 +191,8 @@ func userId(r *http.Request) string {
 	return fmt.Sprintf("%v", r.Context().Value("user"))
 }
 
-// New builds and returns a ProjectController
-func New(s s.Service) *ProjectController {
+// NewController builds and returns a ProjectController
+func NewController(s Service) *ProjectController {
 	return &ProjectController{
 		service: s,
 	}
