@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	handler "github.com/apostrohedottilde/indymorning/api/project/handler"
+	"github.com/apostrohedottilde/indymorning/api/project/handler/middleware/jwt"
+	auth "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/jwt"
 	l "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/logger"
 	t "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/terminator"
 
@@ -31,9 +33,11 @@ func (adapter *HTTPAdapter) Stop() {
 func New(h *handler.RequestHandler) *HTTPAdapter {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/auth/login", l.Log(auth.Generate(t.End())).ServeHTTP).Methods("GET")
+
 	r.HandleFunc("/projects/{id}", l.Log(h.FindOne(t.End())).ServeHTTP).Methods("GET")
 	r.HandleFunc("/projects/{id}", l.Log(h.Update(t.End())).ServeHTTP).Methods("PUT")
-	r.HandleFunc("/projects", l.Log(h.FindAll(t.End())).ServeHTTP).Methods("GET")
+	r.HandleFunc("/projects", l.Log(jwt.Validate(h.FindAll(t.End()))).ServeHTTP).Methods("GET")
 	r.HandleFunc("/projects", l.Log(h.Create(t.End())).ServeHTTP).Methods("POST")
 	r.HandleFunc("/projects", l.Log(h.FindAll(t.End())).ServeHTTP).Methods("PUT")
 	r.HandleFunc("/projects/{id}", l.Log(h.Delete(t.End())).ServeHTTP).Methods("DELETE")
