@@ -1,21 +1,27 @@
 package main
 
 import (
+	"github.com/apostrohedottilde/indymorning/api/shared/adapter"
+	"github.com/apostrohedottilde/indymorning/api/shared/provider"
+	"github.com/apostrohedottilde/indymorning/api/user"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/apostrohedottilde/indymorning/api/adapter"
 	"github.com/apostrohedottilde/indymorning/api/project"
-	"github.com/apostrohedottilde/indymorning/api/provider"
 )
 
 func main() {
 	p := provider.New()
+
+	userRepo := p.UserRepository()
+	userService := user.NewService(userRepo)
+	userController := user.NewController(userService)
+
 	projRepo := p.ProjectRepository()
 	projService := project.NewService(projRepo)
 	projController := project.NewController(projService)
-	adapter := adapter.New(projController)
+	adapter := adapter.New(userController, projController)
 
 	adapter.Start()
 
