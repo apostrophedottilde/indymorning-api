@@ -6,17 +6,17 @@ import (
 	"syscall"
 
 	"github.com/apostrohedottilde/indymorning/api/adapter"
-	pHandler "github.com/apostrohedottilde/indymorning/api/project/handler"
-	pService "github.com/apostrohedottilde/indymorning/api/project/service"
+	projC "github.com/apostrohedottilde/indymorning/api/project/controller"
+	projS "github.com/apostrohedottilde/indymorning/api/project/service"
 	"github.com/apostrohedottilde/indymorning/api/provider"
 )
 
 func main() {
 	p := provider.New()
 	projRepo := p.ProjectRepository()
-	projService := pService.New(projRepo)
-	projHandler := pHandler.New(projService)
-	adapter := adapter.New(projHandler)
+	projService := projS.New(projRepo)
+	projController := projC.New(projService)
+	adapter := adapter.New(projController)
 
 	adapter.Start()
 

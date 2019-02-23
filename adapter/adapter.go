@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	handler "github.com/apostrohedottilde/indymorning/api/project/handler"
+	"github.com/apostrohedottilde/indymorning/api/project/controller"
 	"github.com/apostrohedottilde/indymorning/api/shared/middleware/jwt"
 	l "github.com/apostrohedottilde/indymorning/api/shared/middleware/logger"
 	t "github.com/apostrohedottilde/indymorning/api/shared/middleware/terminator"
@@ -29,7 +29,7 @@ func (adapter *HTTPAdapter) Stop() {
 }
 
 // New creates a new instance of HTTPAdapter and returns a pointer to it.
-func New(h *handler.RequestHandler) *HTTPAdapter {
+func New(h *controller.ProjectController) *HTTPAdapter {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/auth/login", l.Log(jwt.Sign(t.End())).ServeHTTP).Methods("GET")

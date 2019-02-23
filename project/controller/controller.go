@@ -1,4 +1,4 @@
-package http
+package controller
 
 import (
 	"encoding/json"
@@ -17,17 +17,11 @@ type ErrResponse struct {
 	Message string `json:"message"`
 }
 
-type Handler interface {
-	FindOne(handler *Handler)
-	FindAll(handler *Handler)
-	Cancel(handler *Handler)
-}
-
-type RequestHandler struct {
+type ProjectController struct {
 	service s.Service
 }
 
-func (rh *RequestHandler) Create(next http.Handler) http.Handler {
+func (rh *ProjectController) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 		// TODO: extract this data from the request instead of stubbing
@@ -63,7 +57,7 @@ func (rh *RequestHandler) Create(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *RequestHandler) FindOne(next http.Handler) http.Handler {
+func (rh *ProjectController) FindOne(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -85,7 +79,7 @@ func (rh *RequestHandler) FindOne(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *RequestHandler) Update(next http.Handler) http.Handler {
+func (rh *ProjectController) Update(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -124,7 +118,7 @@ func (rh *RequestHandler) Update(next http.Handler) http.Handler {
 }
 
 // FindAll returns a HTTPHandler function that carries out the logic of this request
-func (rh *RequestHandler) FindAll(next http.Handler) http.Handler {
+func (rh *ProjectController) FindAll(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -145,7 +139,7 @@ func (rh *RequestHandler) FindAll(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *RequestHandler) Delete(next http.Handler) http.Handler {
+func (rh *ProjectController) Delete(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -163,7 +157,7 @@ func (rh *RequestHandler) Delete(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *RequestHandler) Cancel(next http.Handler) http.Handler {
+func (rh *ProjectController) Cancel(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r)
 	})
@@ -201,9 +195,9 @@ func userId(r *http.Request) string {
 	return fmt.Sprintf("%v", r.Context().Value("user"))
 }
 
-// New builds and returns a RequestHandler
-func New(s s.Service) *RequestHandler {
-	return &RequestHandler{
+// New builds and returns a ProjectController
+func New(s s.Service) *ProjectController {
+	return &ProjectController{
 		service: s,
 	}
 }
