@@ -1,7 +1,12 @@
 package user
 
+import (
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
+)
+
 type Service interface {
-	Create(loggedInUser string, model User) (user, error)
+	Register(model User) (user, error)
 	FindOne(loggedInUser string, id string) (user, error)
 	FindAll(loggedInUser string) ([]user, error)
 	Update(loggedInUser string, id string, update User) (user, error)
@@ -13,8 +18,12 @@ type UserService struct {
 	repository *UserRepository
 }
 
-// Create a new User.
-func (ps *UserService) Create(loggedInUser string, model User) (user, error) {
+func (ps *UserService) Register(model User) (user, error) {
+	fmt.Println("wont fuckin work")
+	hash, err := bcrypt.GenerateFromPassword([]byte("users-password"), bcrypt.MinCost)
+	model.Password = fmt.Sprintf("%v", hash)
+	fmt.Println("bcrypted password", hash)
+	fmt.Println("wont fuckin work")
 	dummy, err := ps.repository.Create(model)
 	if err != nil {
 		panic(err)

@@ -20,9 +20,14 @@ type HTTPAdapter struct {
 }
 
 // Start http adapter and listen for requests
-func (adapter *HTTPAdapter) Start() {
+func (adapter *HTTPAdapter) Start() error {
 	fmt.Println("Starting HTTP connection...")
-	http.ListenAndServe(":8000", adapter.router)
+	err := http.ListenAndServe(":8000", adapter.router)
+
+	if err != nil {
+		return fmt.Errorf("error starting server")
+	}
+	return nil
 }
 
 // Stop http adapter
@@ -34,12 +39,12 @@ func (adapter *HTTPAdapter) Stop() {
 func New(u *user.UserController, p *project.ProjectController) *HTTPAdapter {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/auth/login", l.Log(jwt.Sign(t.End())).ServeHTTP).Methods("GET")
+	r.HandleFunc("/auth/login", l.Log(jwt.Sign(t.End())).ServeHTTP).Methods("POST")
+	r.HandleFunc("/auth/register", u.Register(t.End()).ServeHTTP).Methods("POST")
 
 	r.HandleFunc("/users/{id}", l.Log(jwt.Validate(u.FindOne(t.End()))).ServeHTTP).Methods("GET")
 	r.HandleFunc("/users/{id}", l.Log(jwt.Validate(u.Update(t.End()))).ServeHTTP).Methods("PUT")
 	r.HandleFunc("/users", l.Log(jwt.Validate(u.FindAll(t.End()))).ServeHTTP).Methods("GET")
-	r.HandleFunc("/users", l.Log(jwt.Validate(u.Create(t.End()))).ServeHTTP).Methods("POST")
 	r.HandleFunc("/users/{id}", l.Log(jwt.Validate(u.Delete(t.End()))).ServeHTTP).Methods("DELETE")
 
 	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(p.FindOne(t.End()))).ServeHTTP).Methods("GET")

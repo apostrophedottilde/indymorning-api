@@ -17,9 +17,8 @@ type UserController struct {
 	service Service
 }
 
-func (rh *UserController) Create(next http.Handler) http.Handler {
+func (rh *UserController) Register(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userID := userId(r)
 		// TODO: extract this data from the request instead of stubbing
 		req := UserRequest{
 			UserName:  "sonicTheHendgehog",
@@ -35,7 +34,7 @@ func (rh *UserController) Create(next http.Handler) http.Handler {
 			Password:  req.Password,
 		}
 
-		res, err := rh.service.Create(userID, newUserStub)
+		res, err := rh.service.Register(newUserStub)
 
 		if err != nil {
 			panic(err)
