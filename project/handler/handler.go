@@ -29,7 +29,7 @@ type RequestHandler struct {
 
 func (rh *RequestHandler) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+		userID := userId(r)
 		// TODO: extract this data from the request instead of stubbing
 		req := request.GameProject{
 			Name:            "Tokyo job hunter - adventure game",
@@ -46,7 +46,7 @@ func (rh *RequestHandler) Create(next http.Handler) http.Handler {
 			State:           "LIVE",
 		}
 
-		res, err := rh.service.Create(newProjectStub)
+		res, err := rh.service.Create(userID, newProjectStub)
 
 		if err != nil {
 			panic(err)
@@ -65,8 +65,10 @@ func (rh *RequestHandler) Create(next http.Handler) http.Handler {
 
 func (rh *RequestHandler) FindOne(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		userID := userId(r)
+
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
-		res, err := rh.service.FindOne(id)
+		res, err := rh.service.FindOne(userID, id)
 
 		if err != nil {
 			panic(err)
@@ -85,6 +87,8 @@ func (rh *RequestHandler) FindOne(next http.Handler) http.Handler {
 
 func (rh *RequestHandler) Update(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		userID := userId(r)
+
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
@@ -102,7 +106,7 @@ func (rh *RequestHandler) Update(next http.Handler) http.Handler {
 			Contributors:    req.Contributors,
 			State:           "LIVE",
 		}
-		res, err := rh.service.Update(id, newProjectStub)
+		res, err := rh.service.Update(userID, id, newProjectStub)
 
 		if err != nil {
 			panic(err)
@@ -122,7 +126,9 @@ func (rh *RequestHandler) Update(next http.Handler) http.Handler {
 // FindAll returns a HTTPHandler function that carries out the logic of this request
 func (rh *RequestHandler) FindAll(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		res, err := rh.service.FindAll()
+		userID := userId(r)
+
+		res, err := rh.service.FindAll(userID)
 
 		if err != nil {
 			panic(err)
@@ -141,9 +147,11 @@ func (rh *RequestHandler) FindAll(next http.Handler) http.Handler {
 
 func (rh *RequestHandler) Delete(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		userID := userId(r)
+
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 
-		err := rh.service.Delete(id)
+		err := rh.service.Delete(userID, id)
 
 		if err != nil {
 			panic(err)
@@ -186,6 +194,11 @@ func errResponse(resp http.ResponseWriter, code string, message string) {
 
 	resp.WriteHeader(d)
 	resp.Write([]byte(data))
+}
+
+// userId of current logged in user
+func userId(r *http.Request) string {
+	return fmt.Sprintf("%v", r.Context().Value("user"))
 }
 
 // New builds and returns a RequestHandler

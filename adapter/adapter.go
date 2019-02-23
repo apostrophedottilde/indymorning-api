@@ -33,15 +33,15 @@ func (adapter *HTTPAdapter) Stop() {
 func New(h *handler.RequestHandler) *HTTPAdapter {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/auth/login", l.Log(auth.Generate(t.End())).ServeHTTP).Methods("GET")
+	r.HandleFunc("/auth/login", l.Log(auth.Sign(t.End())).ServeHTTP).Methods("GET")
 
-	r.HandleFunc("/projects/{id}", l.Log(h.FindOne(t.End())).ServeHTTP).Methods("GET")
-	r.HandleFunc("/projects/{id}", l.Log(h.Update(t.End())).ServeHTTP).Methods("PUT")
+	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(h.FindOne(t.End()))).ServeHTTP).Methods("GET")
+	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(h.Update(t.End()))).ServeHTTP).Methods("PUT")
 	r.HandleFunc("/projects", l.Log(jwt.Validate(h.FindAll(t.End()))).ServeHTTP).Methods("GET")
-	r.HandleFunc("/projects", l.Log(h.Create(t.End())).ServeHTTP).Methods("POST")
-	r.HandleFunc("/projects", l.Log(h.FindAll(t.End())).ServeHTTP).Methods("PUT")
-	r.HandleFunc("/projects/{id}", l.Log(h.Delete(t.End())).ServeHTTP).Methods("DELETE")
-	r.HandleFunc("/projects/{id}/cancel", l.Log(h.Cancel(t.End())).ServeHTTP).Methods("POST")
+	r.HandleFunc("/projects", l.Log(jwt.Validate(h.Create(t.End()))).ServeHTTP).Methods("POST")
+	r.HandleFunc("/projects", l.Log(jwt.Validate(h.FindAll(t.End()))).ServeHTTP).Methods("PUT")
+	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(h.Delete(t.End()))).ServeHTTP).Methods("DELETE")
+	r.HandleFunc("/projects/{id}/cancel", l.Log(jwt.Validate(h.Cancel(t.End()))).ServeHTTP).Methods("POST")
 
 	http.Handle("/", r)
 	return &HTTPAdapter{
