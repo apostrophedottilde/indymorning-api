@@ -21,6 +21,7 @@ jobs:
       - run: go get github.com/jstemmer/go-junit-report
       - run: go mod download
       - run: go build # pull and build dependencies for the project
+# pull and build dependencies for the project
 
       - run:
           name: Run unit tests
@@ -31,6 +32,11 @@ jobs:
           paths:
             - "/go/pkg"
 
+      - run:
+          name: Start service
+          command: go run main.go
+          background: true # keep service running and proceed to next step
+
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: /tmp/test-results
           destination: raw-test-output
@@ -38,25 +44,12 @@ jobs:
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: /tmp/test-results
 
-  deploy:
-    filters:
-      branches:
-        only:
-          - master     
-          
-    - setup_remote_docker:
-        docker_layer_caching: true
+      - setup_remote_docker:
+          docker_layer_caching: true
 
-    - run:
-        name: build and push container
-        command: |
-          docker build -t apostrophe/im-projects:LATEST -t apostrophe/im-projects:v0.0.1 .
-          echo $DOCKER_PWD | docker login -u $DOCKER_USER -p $DOCKER_PWD
-          docker push apostrophe/im-projects:LATEST
-
-workflows:
-  version: 2
-  wfBuild:
-    jobs:
-      - build
-      - deploy    
+      - run:
+          name: build and push container
+          command: |
+            docker build -t apostrophe/im-projects:LATEST -t apostrophe/im-projects:v0.0.1 .
+            echo $DOCKER_PWD | docker login -u $DOCKER_USER -p $DOCKER_PWD
+            docker push apostrophe/im-projects:LATEST
