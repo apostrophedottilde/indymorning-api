@@ -16,6 +16,7 @@ type GameProject struct {
 	Name            string             `json:"name" bson:"name,omitempty"`
 	BriefSynopsis   string             `json:"value" bson:"value,omitempty"`
 	FullDescription string             `json:"briefSynopsis" bson:"briefSynopsis,omitempty"`
+	Creator         string             `json:"creator" bson:"creator,omitempty"`
 	Contributors    []string           `json:"contributors" bson:"contributors,omitempty"`
 	State           string             `json:"state" bson:"state,omitempty"`
 }

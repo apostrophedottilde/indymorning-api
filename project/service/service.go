@@ -6,18 +6,19 @@ import (
 )
 
 type Service interface {
-	Create(model domain.GameProject) (domain.GameProject, error)
-	FindOne(id string) (domain.GameProject, error)
-	FindAll() ([]domain.GameProject, error)
-	Update(id string, update domain.GameProject) (domain.GameProject, error)
-	Delete(s string) error
+	Create(loggedInUser string, model domain.GameProject) (domain.GameProject, error)
+	FindOne(loggedInUser string, id string) (domain.GameProject, error)
+	FindAll(loggedInUser string) ([]domain.GameProject, error)
+	Update(loggedInUser string, id string, update domain.GameProject) (domain.GameProject, error)
+	Delete(loggedInUser string, s string) error
 }
 
 type ProjectService struct {
 	repository *database.ProjectRepository
 }
 
-func (ps *ProjectService) Create(model domain.GameProject) (domain.GameProject, error) {
+func (ps *ProjectService) Create(loggedInUser string, model domain.GameProject) (domain.GameProject, error) {
+	model.Creator = loggedInUser
 	dummy, err := ps.repository.Create(model)
 	if err != nil {
 		panic(err)
@@ -25,7 +26,7 @@ func (ps *ProjectService) Create(model domain.GameProject) (domain.GameProject, 
 	return dummy, nil
 }
 
-func (ps *ProjectService) FindOne(id string) (domain.GameProject, error) {
+func (ps *ProjectService) FindOne(loggedInUser string, id string) (domain.GameProject, error) {
 	dummy, err := ps.repository.FindOne(id)
 	if err != nil {
 		panic(err)
@@ -33,7 +34,7 @@ func (ps *ProjectService) FindOne(id string) (domain.GameProject, error) {
 	return dummy, nil
 }
 
-func (ps *ProjectService) FindAll() ([]domain.GameProject, error) {
+func (ps *ProjectService) FindAll(loggedInUser string) ([]domain.GameProject, error) {
 	dummy, err := ps.repository.FindAll()
 	if err != nil {
 		panic(err)
@@ -41,7 +42,7 @@ func (ps *ProjectService) FindAll() ([]domain.GameProject, error) {
 	return dummy, nil
 }
 
-func (ps *ProjectService) Update(id string, update domain.GameProject) (domain.GameProject, error) {
+func (ps *ProjectService) Update(loggedInUser string, id string, update domain.GameProject) (domain.GameProject, error) {
 	dummy, err := ps.repository.Update(id, update)
 	if err != nil {
 		panic(err)
@@ -49,7 +50,7 @@ func (ps *ProjectService) Update(id string, update domain.GameProject) (domain.G
 	return dummy, nil
 }
 
-func (ps *ProjectService) Delete(id string) error {
+func (ps *ProjectService) Delete(loggedInUser string, id string) error {
 	err := ps.repository.Delete(id)
 	if err != nil {
 		panic(err)
