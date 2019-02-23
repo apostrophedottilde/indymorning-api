@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	handler "github.com/apostrohedottilde/indymorning/api/project/handler"
-	"github.com/apostrohedottilde/indymorning/api/project/handler/middleware/jwt"
-	auth "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/jwt"
-	l "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/logger"
-	t "github.com/apostrohedottilde/indymorning/api/project/handler/middleware/terminator"
+	"github.com/apostrohedottilde/indymorning/api/shared/middleware/jwt"
+	l "github.com/apostrohedottilde/indymorning/api/shared/middleware/logger"
+	t "github.com/apostrohedottilde/indymorning/api/shared/middleware/terminator"
 
 	"github.com/gorilla/mux"
 )
@@ -33,7 +32,7 @@ func (adapter *HTTPAdapter) Stop() {
 func New(h *handler.RequestHandler) *HTTPAdapter {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/auth/login", l.Log(auth.Sign(t.End())).ServeHTTP).Methods("GET")
+	r.HandleFunc("/auth/login", l.Log(jwt.Sign(t.End())).ServeHTTP).Methods("GET")
 
 	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(h.FindOne(t.End()))).ServeHTTP).Methods("GET")
 	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(h.Update(t.End()))).ServeHTTP).Methods("PUT")
