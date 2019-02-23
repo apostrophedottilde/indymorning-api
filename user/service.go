@@ -2,6 +2,7 @@ package user
 
 import (
 	"fmt"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -21,8 +22,8 @@ type UserService struct {
 func (ps *UserService) Register(model User) (user, error) {
 	fmt.Println("wont fuckin work")
 	hash, err := bcrypt.GenerateFromPassword([]byte("users-password"), bcrypt.MinCost)
-	model.Password = fmt.Sprintf("%v", hash)
-	fmt.Println("bcrypted password", hash)
+	model.Password = string(hash)
+	fmt.Println("bcrypted password", model.Password)
 	fmt.Println("wont fuckin work")
 	dummy, err := ps.repository.Create(model)
 	if err != nil {
