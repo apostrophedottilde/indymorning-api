@@ -1,7 +1,7 @@
-package request
+package project
 
 // GameProject request model
-type GameProject struct {
+type GameProjectRequest struct {
 	Name            string   `json:"name"`
 	BriefSynopsis   string   `json:"value"`
 	FullDescription string   `json:"briefSynopsis"`

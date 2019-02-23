@@ -1,4 +1,4 @@
-package database
+package project
 
 import (
 	"context"
@@ -8,25 +8,22 @@ import (
 
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/bson/primitive"
-
-	"github.com/apostrohedottilde/indymorning/api/project/domain"
-
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 type Repository interface {
-	FindOne(id string) (domain.GameProject, error)
-	FindAll() ([]domain.GameProject, error)
+	FindOne(id string) (GameProject, error)
+	FindAll() ([]GameProject, error)
 }
 
 type ProjectRepository struct {
 	client mongo.Client
 }
 
-func (ps *ProjectRepository) Create(model domain.GameProject) (domain.GameProject, error) {
+func (ps *ProjectRepository) Create(model GameProject) (GameProject, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	
+
 	res, err := collection.InsertOne(ctx, model)
 	defer cancel()
 
@@ -43,7 +40,7 @@ func (ps *ProjectRepository) Create(model domain.GameProject) (domain.GameProjec
 
 	filter := bson.D{{"_id", docID}}
 
-	var result domain.GameProject
+	var result GameProject
 	err = collection.FindOne(ctx, filter).Decode(&result)
 	defer cancel()
 
@@ -54,7 +51,7 @@ func (ps *ProjectRepository) Create(model domain.GameProject) (domain.GameProjec
 	return result, nil
 }
 
-func (ps *ProjectRepository) FindOne(id string) (domain.GameProject, error) {
+func (ps *ProjectRepository) FindOne(id string) (GameProject, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -65,7 +62,7 @@ func (ps *ProjectRepository) FindOne(id string) (domain.GameProject, error) {
 
 	filter := bson.D{{"_id", docID}}
 
-	var result domain.GameProject
+	var result GameProject
 	err = collection.FindOne(ctx, filter).Decode(&result)
 	defer cancel()
 
@@ -76,7 +73,7 @@ func (ps *ProjectRepository) FindOne(id string) (domain.GameProject, error) {
 	return result, nil
 }
 
-func (ps *ProjectRepository) FindAll() ([]domain.GameProject, error) {
+func (ps *ProjectRepository) FindAll() ([]GameProject, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	cur, err := collection.Find(ctx, bson.M{})
@@ -86,10 +83,10 @@ func (ps *ProjectRepository) FindAll() ([]domain.GameProject, error) {
 
 	}
 
-	var projects []domain.GameProject
+	var projects []GameProject
 
 	for cur.Next(ctx) {
-		var result domain.GameProject
+		var result GameProject
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
@@ -101,7 +98,7 @@ func (ps *ProjectRepository) FindAll() ([]domain.GameProject, error) {
 	return projects, nil
 }
 
-func (ps *ProjectRepository) Update(id string, project domain.GameProject) (domain.GameProject, error) {
+func (ps *ProjectRepository) Update(id string, project GameProject) (GameProject, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -128,7 +125,7 @@ func (ps *ProjectRepository) Update(id string, project domain.GameProject) (doma
 		log.Fatal(err)
 	}
 
-	var updated domain.GameProject
+	var updated GameProject
 
 	err = collection.FindOne(ctx, filter).Decode(&updated)
 	defer cancel()
@@ -157,7 +154,7 @@ func (ps *ProjectRepository) Delete(id string) error {
 	return nil
 }
 
-func New() *ProjectRepository {
+func NewRepository() *ProjectRepository {
 	mclient, err := mongo.Connect(context.TODO(), "mongodb://mongodb:27017")
 
 	if err != nil {

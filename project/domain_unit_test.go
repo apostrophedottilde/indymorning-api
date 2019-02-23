@@ -1,10 +1,10 @@
-package domain_test
+package project_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/apostrohedottilde/indymorning/api/project/domain"
+	"github.com/apostrohedottilde/indymorning/api/project"
 )
 
 func TestMain(m *testing.M) {
@@ -13,7 +13,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestProject_Cancel_From_Live(t *testing.T) {
-	underTest := &domain.GameProject{State: "LIVE"}
+	underTest := &project.GameProject{State: "LIVE"}
 
 	if underTest.State != "LIVE" {
 		t.Error("Expected initial state to be 'LIVE'")
@@ -27,7 +27,7 @@ func TestProject_Cancel_From_Live(t *testing.T) {
 }
 
 func TestProject_Cancel_From_Cancelled(t *testing.T) {
-	underTest := &domain.GameProject{State: "CANCELLED"}
+	underTest := &project.GameProject{State: "CANCELLED"}
 
 	if underTest.State != "CANCELLED" {
 		t.Error("Expected initial state to be 'CANCELLED'")
