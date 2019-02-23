@@ -1,4 +1,4 @@
-package domain_test
+package project_test
 
 import (
 	"os"
