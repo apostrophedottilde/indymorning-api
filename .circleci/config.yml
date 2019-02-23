@@ -39,11 +39,6 @@ jobs:
           path: /tmp/test-results
 
   deploy:
-    filters:
-      branches:
-        only:
-          - master     
-          
     - setup_remote_docker:
         docker_layer_caching: true
 
