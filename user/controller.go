@@ -19,12 +19,12 @@ type UserController struct {
 
 func (rh *UserController) Register(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TODO: extract this data from the request instead of stubbing
-		req := UserRequest{
-			UserName:  "sonicTheHendgehog",
-			FirstName: "Barry",
-			LastName:  "Hedgehog",
-			Password:  "pa55w0rd",
+		var req UserRequest
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&req)
+
+		if err != nil {
+			panic("could not convert post data to request struct")
 		}
 
 		newUserStub := User{
@@ -80,11 +80,12 @@ func (rh *UserController) Update(next http.Handler) http.Handler {
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		req := UserRequest{
-			UserName:  "sonicTheHendgehog",
-			FirstName: "Barry",
-			LastName:  "Hedgehog",
-			Password:  "pa55w0rd",
+		var req UserRequest
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&req)
+
+		if err != nil {
+			panic("could not convert post data to request struct")
 		}
 
 		newUserStub := User{

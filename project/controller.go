@@ -20,12 +20,13 @@ type ProjectController struct {
 func (rh *ProjectController) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
-		// TODO: extract this data from the request instead of stubbing
-		req := GameProjectRequest{
-			Name:            "Tokyo job hunter - adventure game",
-			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
-			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
-			Contributors:    []string{"user1", "user2", "user3"},
+
+		var req ProjectRequest
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&req)
+
+		if err != nil {
+			panic("could not convert post data to request struct")
 		}
 
 		newProjectStub := GameProject{
@@ -82,11 +83,12 @@ func (rh *ProjectController) Update(next http.Handler) http.Handler {
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		req := GameProjectRequest{
-			Name:            "Tokyo job hunter - adventure game",
-			BriefSynopsis:   "This is an adventure game about moving trying to move to Tokyo",
-			FullDescription: "Enter the exciting world of applying for jobs as a software developer in Tokyo with the amzingly fun adventure simulator game!",
-			Contributors:    []string{"user1", "user2", "user3"},
+		var req ProjectRequest
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&req)
+
+		if err != nil {
+			panic("could not convert post data to request struct")
 		}
 
 		newProjectStub := GameProject{
