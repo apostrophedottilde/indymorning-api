@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/apostrohedottilde/indymorning/api/shared/adapter"
-	"github.com/apostrohedottilde/indymorning/api/shared/provider"
-	"github.com/apostrohedottilde/indymorning/api/user"
+	"github.com/apostrophedottilde/indymorning-api/shared/adapter"
+	"github.com/apostrophedottilde/indymorning-api/shared/provider"
+	"github.com/apostrophedottilde/indymorning-api/user"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/apostrohedottilde/indymorning/api/project"
+	"github.com/apostrophedottilde/indymorning-api/project"
 )
 
 func main() {

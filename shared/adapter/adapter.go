@@ -2,14 +2,14 @@ package adapter
 
 import (
 	"fmt"
-	"github.com/apostrohedottilde/indymorning/api/shared/jwt"
+	"github.com/apostrophedottilde/indymorning-api/shared/jwt"
 	"net/http"
 
-	"github.com/apostrohedottilde/indymorning/api/project"
-	"github.com/apostrohedottilde/indymorning/api/user"
+	"github.com/apostrophedottilde/indymorning-api/project"
+	"github.com/apostrophedottilde/indymorning-api/user"
 
-	l "github.com/apostrohedottilde/indymorning/api/shared/middleware/logger"
-	t "github.com/apostrohedottilde/indymorning/api/shared/middleware/terminator"
+	l "github.com/apostrophedottilde/indymorning-api/shared/middleware/logger"
+	t "github.com/apostrophedottilde/indymorning-api/shared/middleware/terminator"
 
 	"github.com/gorilla/mux"
 )

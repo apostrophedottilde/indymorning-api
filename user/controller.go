@@ -3,7 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/apostrohedottilde/indymorning/api/shared"
+	"github.com/apostrophedottilde/indymorning-api/shared/jwt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,7 +20,7 @@ type UserController struct {
 
 func (rh *UserController) Login(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		token := shared.Sign()
+		token := jwt.Sign()
 		buildResponse(w, 200)
 		_, _ = w.Write([]byte(token))
 	})
