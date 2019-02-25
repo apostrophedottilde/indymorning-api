@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"github.com/apostrohedottilde/indymorning/api/project"
-	"github.com/apostrohedottilde/indymorning/api/user"
+	"github.com/apostrophedottilde/indymorning-api/project"
+	"github.com/apostrophedottilde/indymorning-api/user"
 )
 
 type Provider struct {

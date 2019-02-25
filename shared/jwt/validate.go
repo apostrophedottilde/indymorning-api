@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/apostrohedottilde/indymorning/api/shared/utils"
+	"github.com/apostrophedottilde/indymorning-api/shared/utils"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

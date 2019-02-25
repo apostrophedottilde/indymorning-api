@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/apostrohedottilde/indymorning/api/project"
+	"github.com/apostrophedottilde/indymorning-api/project"
 )
 
 func TestMain(m *testing.M) {
