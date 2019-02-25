@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/apostrohedottilde/indymorning/api/shared"
 	"net/http"
 	"strconv"
 	"strings"
@@ -15,6 +16,14 @@ type ErrResponse struct {
 
 type UserController struct {
 	service Service
+}
+
+func (rh *UserController) Login(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token := shared.Sign()
+		buildResponse(w, 200)
+		_, _ = w.Write([]byte(token))
+	})
 }
 
 func (rh *UserController) Register(next http.Handler) http.Handler {
