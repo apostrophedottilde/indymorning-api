@@ -1,4 +1,4 @@
-package project
+package forum
 
 import (
 	"context"
@@ -11,16 +11,16 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
-type Repository interface {
-	FindOne(id string) (GameProject, error)
-	FindAll() ([]GameProject, error)
+type repository interface {
+	FindOne(id string) (Forum, error)
+	FindAll() ([]Forum, error)
 }
 
-type ProjectRepository struct {
+type Repository struct {
 	client mongo.Client
 }
 
-func (ps *ProjectRepository) Create(model GameProject) (GameProject, error) {
+func (ps *Repository) Create(model Forum) (Forum, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -40,7 +40,7 @@ func (ps *ProjectRepository) Create(model GameProject) (GameProject, error) {
 
 	filter := bson.D{{"_id", docID}}
 
-	var result GameProject
+	var result Forum
 	err = collection.FindOne(ctx, filter).Decode(&result)
 	defer cancel()
 
@@ -51,7 +51,7 @@ func (ps *ProjectRepository) Create(model GameProject) (GameProject, error) {
 	return result, nil
 }
 
-func (ps *ProjectRepository) FindOne(id string) (GameProject, error) {
+func (ps *Repository) FindOne(id string) (Forum, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -62,7 +62,7 @@ func (ps *ProjectRepository) FindOne(id string) (GameProject, error) {
 
 	filter := bson.D{{"_id", docID}}
 
-	var result GameProject
+	var result Forum
 	err = collection.FindOne(ctx, filter).Decode(&result)
 	defer cancel()
 
@@ -73,7 +73,7 @@ func (ps *ProjectRepository) FindOne(id string) (GameProject, error) {
 	return result, nil
 }
 
-func (ps *ProjectRepository) FindAll() ([]GameProject, error) {
+func (ps *Repository) FindAll() ([]Forum, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	cur, err := collection.Find(ctx, bson.M{})
@@ -83,10 +83,10 @@ func (ps *ProjectRepository) FindAll() ([]GameProject, error) {
 
 	}
 
-	var projects []GameProject
+	var projects []Forum
 
 	for cur.Next(ctx) {
-		var result GameProject
+		var result Forum
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
@@ -98,7 +98,7 @@ func (ps *ProjectRepository) FindAll() ([]GameProject, error) {
 	return projects, nil
 }
 
-func (ps *ProjectRepository) Update(id string, project GameProject) (GameProject, error) {
+func (ps *Repository) Update(id string, project Forum) (Forum, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -110,10 +110,11 @@ func (ps *ProjectRepository) Update(id string, project GameProject) (GameProject
 
 	lol := bson.D{
 		{"$set", bson.D{
-			{"name", project.Name},
-			{"briefSynopsis", project.BriefSynopsis},
-			{"fullDescription", project.FullDescription},
-			{"contributors", project.Contributors},
+			{"name", project.Title},
+			{"description", project.Description},
+			{"posts", project.Posts},
+			{"tags", project.Tags},
+			{"creator", project.Creator},
 			{"state", project.State},
 		}},
 	}
@@ -125,7 +126,7 @@ func (ps *ProjectRepository) Update(id string, project GameProject) (GameProject
 		log.Fatal(err)
 	}
 
-	var updated GameProject
+	var updated Forum
 
 	err = collection.FindOne(ctx, filter).Decode(&updated)
 	defer cancel()
@@ -136,7 +137,7 @@ func (ps *ProjectRepository) Update(id string, project GameProject) (GameProject
 	return updated, nil
 }
 
-func (ps *ProjectRepository) Delete(id string) error {
+func (ps *Repository) Delete(id string) error {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -154,7 +155,7 @@ func (ps *ProjectRepository) Delete(id string) error {
 	return nil
 }
 
-func NewRepository() *ProjectRepository {
+func NewRepository() *Repository {
 	mclient, err := mongo.Connect(context.TODO(), "mongodb://mongodb:27017")
 
 	if err != nil {
@@ -170,7 +171,7 @@ func NewRepository() *ProjectRepository {
 
 	fmt.Println("Connected to MongoDB!")
 
-	return &ProjectRepository{
+	return &Repository{
 		client: *mclient,
 	}
 }

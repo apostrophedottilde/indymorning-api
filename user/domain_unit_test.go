@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/apostrophedottilde/indymorning-api/project"
+	"github.com/apostrophedottilde/go-forum-api/forum"
 )
 
 func TestMain(m *testing.M) {
@@ -13,7 +13,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestProject_Cancel_From_Live(t *testing.T) {
-	underTest := &project.GameProject{State: "LIVE"}
+	underTest := &forum.Forum{State: "LIVE"}
 
 	if underTest.State != "LIVE" {
 		t.Error("Expected initial state to be 'LIVE'")
@@ -22,12 +22,12 @@ func TestProject_Cancel_From_Live(t *testing.T) {
 	underTest.Cancel()
 
 	if underTest.State != "CANCELLED" {
-		t.Error("Expected state to be 'CANCELLED' after invoking Cancel() function.")
+		t.Error("Expected state to be 'CANCELLED' after invoking Close() function.")
 	}
 }
 
 func TestProject_Cancel_From_Cancelled(t *testing.T) {
-	underTest := &project.GameProject{State: "CANCELLED"}
+	underTest := &forum.Forum{State: "CANCELLED"}
 
 	if underTest.State != "CANCELLED" {
 		t.Error("Expected initial state to be 'CANCELLED'")
@@ -36,6 +36,6 @@ func TestProject_Cancel_From_Cancelled(t *testing.T) {
 	_, err := underTest.Cancel()
 
 	if err.Error() != "Cannot transition a cancelled project into 'CANCELLED' state" {
-		t.Error("Expected state to be 'CANCELLED' after invoking Cancel() function.")
+		t.Error("Expected state to be 'CANCELLED' after invoking Close() function.")
 	}
 }

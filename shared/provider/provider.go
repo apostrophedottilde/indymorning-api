@@ -1,19 +1,19 @@
 package provider
 
 import (
-	"github.com/apostrophedottilde/indymorning-api/project"
-	"github.com/apostrophedottilde/indymorning-api/user"
+	"github.com/apostrophedottilde/go-forum-api/forum"
+	"github.com/apostrophedottilde/go-forum-api/user"
 )
 
 type Provider struct {
 }
 
-func (provider *Provider) UserRepository() *user.UserRepository {
+func (provider *Provider) UserRepository() *user.Repository {
 	return user.NewRepository()
 }
 
-func (provider *Provider) ProjectRepository() *project.ProjectRepository {
-	return project.NewRepository()
+func (provider *Provider) ForumRepository() *forum.Repository {
+	return forum.NewRepository()
 }
 
 func (provider *Provider) Close() {

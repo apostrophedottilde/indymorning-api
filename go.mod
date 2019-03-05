@@ -1,4 +1,4 @@
-module github.com/apostrophedottilde/indymorning-api
+module github.com/apostrophedottilde/go-forum-api
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

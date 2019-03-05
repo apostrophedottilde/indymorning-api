@@ -1,4 +1,4 @@
-package project
+package forum
 
 import (
 	"encoding/json"
@@ -13,15 +13,15 @@ type ErrResponse struct {
 	Message string `json:"message"`
 }
 
-type ProjectController struct {
-	service Service
+type Controller struct {
+	service service
 }
 
-func (rh *ProjectController) Create(next http.Handler) http.Handler {
+func (rh *Controller) Create(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
-		var req ProjectRequest
+		var req Request
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&req)
 
@@ -29,12 +29,13 @@ func (rh *ProjectController) Create(next http.Handler) http.Handler {
 			panic("could not convert post data to request struct")
 		}
 
-		newProjectStub := GameProject{
-			Name:            req.Name,
-			BriefSynopsis:   req.BriefSynopsis,
-			FullDescription: req.FullDescription,
-			Contributors:    req.Contributors,
-			State:           "LIVE",
+		newProjectStub := Forum{
+			Title:       req.Title,
+			Description: req.Description,
+			Posts:       req.Posts,
+			Creator:     req.Creator,
+			Tags:        req.Tags,
+			State:       req.State,
 		}
 
 		res, err := rh.service.Create(userID, newProjectStub)
@@ -54,7 +55,7 @@ func (rh *ProjectController) Create(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *ProjectController) FindOne(next http.Handler) http.Handler {
+func (rh *Controller) FindOne(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -76,14 +77,14 @@ func (rh *ProjectController) FindOne(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *ProjectController) Update(next http.Handler) http.Handler {
+func (rh *Controller) Update(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		var req ProjectRequest
+		var req Request
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&req)
 
@@ -91,12 +92,13 @@ func (rh *ProjectController) Update(next http.Handler) http.Handler {
 			panic("could not convert post data to request struct")
 		}
 
-		newProjectStub := GameProject{
-			Name:            req.Name,
-			BriefSynopsis:   req.BriefSynopsis,
-			FullDescription: req.FullDescription,
-			Contributors:    req.Contributors,
-			State:           "LIVE",
+		newProjectStub := Forum{
+			Title:       req.Title,
+			Description: req.Description,
+			Posts:       req.Posts,
+			Creator:     req.Creator,
+			Tags:        req.Tags,
+			State:       req.State,
 		}
 		res, err := rh.service.Update(userID, id, newProjectStub)
 
@@ -116,7 +118,7 @@ func (rh *ProjectController) Update(next http.Handler) http.Handler {
 }
 
 // FindAll returns a HTTPHandler function that carries out the logic of this request
-func (rh *ProjectController) FindAll(next http.Handler) http.Handler {
+func (rh *Controller) FindAll(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -137,7 +139,7 @@ func (rh *ProjectController) FindAll(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *ProjectController) Delete(next http.Handler) http.Handler {
+func (rh *Controller) Delete(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -155,7 +157,7 @@ func (rh *ProjectController) Delete(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *ProjectController) Cancel(next http.Handler) http.Handler {
+func (rh *Controller) Cancel(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r)
 	})
@@ -193,9 +195,9 @@ func userId(r *http.Request) string {
 	return fmt.Sprintf("%v", r.Context().Value("user"))
 }
 
-// NewController builds and returns a ProjectController
-func NewController(s Service) *ProjectController {
-	return &ProjectController{
+// NewController builds and returns a Controller
+func NewController(s service) *Controller {
+	return &Controller{
 		service: s,
 	}
 }

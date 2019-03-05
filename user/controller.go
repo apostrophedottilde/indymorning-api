@@ -3,7 +3,7 @@ package user
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/apostrophedottilde/indymorning-api/shared/jwt"
+	"github.com/apostrophedottilde/go-forum-api/shared/jwt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -14,11 +14,11 @@ type ErrResponse struct {
 	Message string `json:"message"`
 }
 
-type UserController struct {
-	service Service
+type Controller struct {
+	service service
 }
 
-func (rh *UserController) Login(next http.Handler) http.Handler {
+func (rh *Controller) Login(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := jwt.Sign()
 		buildResponse(w, 200)
@@ -26,9 +26,9 @@ func (rh *UserController) Login(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *UserController) Register(next http.Handler) http.Handler {
+func (rh *Controller) Register(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var req UserRequest
+		var req Request
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&req)
 
@@ -60,7 +60,7 @@ func (rh *UserController) Register(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *UserController) FindOne(next http.Handler) http.Handler {
+func (rh *Controller) FindOne(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -82,14 +82,14 @@ func (rh *UserController) FindOne(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *UserController) Update(next http.Handler) http.Handler {
+func (rh *Controller) Update(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
 		id := strings.TrimPrefix(r.URL.Path, "/projects/")
 		// TODO: extract this data from the request instead of stubbing
 
-		var req UserRequest
+		var req Request
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&req)
 
@@ -122,7 +122,7 @@ func (rh *UserController) Update(next http.Handler) http.Handler {
 }
 
 // FindAll returns a HTTPHandler function that carries out the logic of this request
-func (rh *UserController) FindAll(next http.Handler) http.Handler {
+func (rh *Controller) FindAll(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -143,7 +143,7 @@ func (rh *UserController) FindAll(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *UserController) Delete(next http.Handler) http.Handler {
+func (rh *Controller) Delete(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		userID := userId(r)
 
@@ -161,7 +161,7 @@ func (rh *UserController) Delete(next http.Handler) http.Handler {
 	})
 }
 
-func (rh *UserController) Cancel(next http.Handler) http.Handler {
+func (rh *Controller) Cancel(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r)
 	})
@@ -199,9 +199,9 @@ func userId(r *http.Request) string {
 	return fmt.Sprintf("%v", r.Context().Value("user"))
 }
 
-// NewController builds and returns a UserController
-func NewController(s Service) *UserController {
-	return &UserController{
+// NewController builds and returns a Controller
+func NewController(s service) *Controller {
+	return &Controller{
 		service: s,
 	}
 }
