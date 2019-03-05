@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/apostrophedottilde/indymorning-api/shared/adapter"
-	"github.com/apostrophedottilde/indymorning-api/shared/provider"
-	"github.com/apostrophedottilde/indymorning-api/user"
+	"github.com/apostrophedottilde/go-forum-api/shared/adapter"
+	"github.com/apostrophedottilde/go-forum-api/shared/provider"
+	"github.com/apostrophedottilde/go-forum-api/user"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/apostrophedottilde/indymorning-api/project"
+	"github.com/apostrophedottilde/go-forum-api/forum"
 )
 
 func main() {
@@ -18,9 +18,9 @@ func main() {
 	userService := user.NewService(userRepo)
 	userController := user.NewController(userService)
 
-	projRepo := p.ProjectRepository()
-	projService := project.NewService(projRepo)
-	projController := project.NewController(projService)
+	projRepo := p.ForumRepository()
+	projService := forum.NewService(projRepo)
+	projController := forum.NewController(projService)
 	adapter := adapter.New(userController, projController)
 
 	adapter.Start()

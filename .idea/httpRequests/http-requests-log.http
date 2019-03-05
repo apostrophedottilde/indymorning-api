@@ -1,0 +1,109 @@
+GET http://192.168.99.100:9001/forums
+Accept: */*
+Cache-Control: no-cache
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQzNTY3ODZ9.BrWVw3s8fs9xbqN4oqhy5Td_x-pWl-HKjHRl7geWxMM
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T084049.200.json
+
+###
+
+GET http://192.168.99.100:9001/forums
+Accept: */*
+Cache-Control: no-cache
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQzNTY3ODZ9.BrWVw3s8fs9xbqN4oqhy5Td_x-pWl-HKjHRl7geWxMM
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T081057.200.json
+
+###
+
+POST http://192.168.99.100:9001/forums
+Accept: */*
+Cache-Control: no-cache
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQzNTY3ODZ9.BrWVw3s8fs9xbqN4oqhy5Td_x-pWl-HKjHRl7geWxMM
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T081054.200.json
+
+###
+
+POST http://192.168.99.100:9001/forums
+Accept: */*
+Cache-Control: no-cache
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQzNTY3ODZ9.BrWVw3s8fs9xbqN4oqhy5Td_x-pWl-HKjHRl7geWxMM
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T081047.200.json
+
+###
+
+POST http://192.168.99.100:9001/auth/login
+Accept: */*
+Cache-Control: no-cache
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQzNTY3ODZ9.BrWVw3s8fs9xbqN4oqhy5Td_x-pWl-HKjHRl7geWxMM
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T081036.200.json
+
+###
+
+POST http://192.168.99.100:9001/auth/login
+Accept: */*
+Cache-Control: no-cache
+Authorization:
+
+{     "userName":"gezzer","password":"1234567890" }
+
+<> 2019-03-05T081020.200.json
+
+###
+
+POST http://192.168.99.100:9001/auth/register
+Accept: */*
+Cache-Control: no-cache
+Authorization:
+
+{     "userName":"gezzer",     "firstName":"yo",     "lastName":"lastname",     "password":"1234567890" }
+
+<> 2019-03-05T080934.200.json
+
+###
+
+GET http://192.168.99.100:9001/forums
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-03-05T080546.403.txt
+
+###
+
+GET http://localhost:9001/forums
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+GET http://localhost:9001/projects
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+GET http://localhost:9001/projects
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+GET http://localhost:9001/forums
+Accept: */*
+Cache-Control: no-cache
+
+###
+

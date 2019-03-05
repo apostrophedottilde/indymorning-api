@@ -11,16 +11,16 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
-type Repository interface {
+type repository interface {
 	FindOne(id string) (user, error)
 	FindAll() ([]user, error)
 }
 
-type UserRepository struct {
+type Repository struct {
 	client mongo.Client
 }
 
-func (ps *UserRepository) Create(model User) (user, error) {
+func (ps *Repository) Create(model User) (user, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -51,7 +51,7 @@ func (ps *UserRepository) Create(model User) (user, error) {
 	return &result, nil
 }
 
-func (ps *UserRepository) FindOne(id string) (user, error) {
+func (ps *Repository) FindOne(id string) (user, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -73,7 +73,7 @@ func (ps *UserRepository) FindOne(id string) (user, error) {
 	return &result, nil
 }
 
-func (ps *UserRepository) FindAll() ([]user, error) {
+func (ps *Repository) FindAll() ([]user, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	cur, err := collection.Find(ctx, bson.M{})
@@ -98,7 +98,7 @@ func (ps *UserRepository) FindAll() ([]user, error) {
 	return projects, nil
 }
 
-func (ps *UserRepository) Update(id string, project User) (user, error) {
+func (ps *Repository) Update(id string, project User) (user, error) {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	docID, err := primitive.ObjectIDFromHex(id)
@@ -135,7 +135,7 @@ func (ps *UserRepository) Update(id string, project User) (user, error) {
 	return updated, nil
 }
 
-func (ps *UserRepository) Delete(id string) error {
+func (ps *Repository) Delete(id string) error {
 	collection := ps.client.Database("projects").Collection("projects")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -153,7 +153,7 @@ func (ps *UserRepository) Delete(id string) error {
 	return nil
 }
 
-func NewRepository() *UserRepository {
+func NewRepository() *Repository {
 	mclient, err := mongo.Connect(context.TODO(), "mongodb://mongodb:27017")
 
 	if err != nil {
@@ -169,7 +169,7 @@ func NewRepository() *UserRepository {
 
 	fmt.Println("Connected to MongoDB!")
 
-	return &UserRepository{
+	return &Repository{
 		client: *mclient,
 	}
 }

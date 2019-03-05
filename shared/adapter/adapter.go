@@ -2,14 +2,14 @@ package adapter
 
 import (
 	"fmt"
-	"github.com/apostrophedottilde/indymorning-api/shared/jwt"
+	"github.com/apostrophedottilde/go-forum-api/shared/jwt"
 	"net/http"
 
-	"github.com/apostrophedottilde/indymorning-api/project"
-	"github.com/apostrophedottilde/indymorning-api/user"
+	"github.com/apostrophedottilde/go-forum-api/forum"
+	"github.com/apostrophedottilde/go-forum-api/user"
 
-	l "github.com/apostrophedottilde/indymorning-api/shared/middleware/logger"
-	t "github.com/apostrophedottilde/indymorning-api/shared/middleware/terminator"
+	l "github.com/apostrophedottilde/go-forum-api/shared/middleware/logger"
+	t "github.com/apostrophedottilde/go-forum-api/shared/middleware/terminator"
 
 	"github.com/gorilla/mux"
 )
@@ -36,7 +36,7 @@ func (adapter *HTTPAdapter) Stop() {
 }
 
 // New creates a new instance of HTTPAdapter and returns a pointer to it.
-func New(u *user.UserController, p *project.ProjectController) *HTTPAdapter {
+func New(u *user.Controller, p *forum.Controller) *HTTPAdapter {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/auth/login", l.Log(u.Login(t.End())).ServeHTTP).Methods("POST")
@@ -47,12 +47,12 @@ func New(u *user.UserController, p *project.ProjectController) *HTTPAdapter {
 	r.HandleFunc("/users", l.Log(jwt.Validate(u.FindAll(t.End()))).ServeHTTP).Methods("GET")
 	r.HandleFunc("/users/{id}", l.Log(jwt.Validate(u.Delete(t.End()))).ServeHTTP).Methods("DELETE")
 
-	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(p.FindOne(t.End()))).ServeHTTP).Methods("GET")
-	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(p.Update(t.End()))).ServeHTTP).Methods("PUT")
-	r.HandleFunc("/projects", l.Log(jwt.Validate(p.FindAll(t.End()))).ServeHTTP).Methods("GET")
-	r.HandleFunc("/projects", l.Log(jwt.Validate(p.Create(t.End()))).ServeHTTP).Methods("POST")
-	r.HandleFunc("/projects/{id}", l.Log(jwt.Validate(p.Delete(t.End()))).ServeHTTP).Methods("DELETE")
-	r.HandleFunc("/projects/{id}/cancel", l.Log(jwt.Validate(p.Cancel(t.End()))).ServeHTTP).Methods("POST")
+	r.HandleFunc("/forums/{id}", l.Log(jwt.Validate(p.FindOne(t.End()))).ServeHTTP).Methods("GET")
+	r.HandleFunc("/forums/{id}", l.Log(jwt.Validate(p.Update(t.End()))).ServeHTTP).Methods("PUT")
+	r.HandleFunc("/forums", l.Log(jwt.Validate(p.FindAll(t.End()))).ServeHTTP).Methods("GET")
+	r.HandleFunc("/forums", l.Log(jwt.Validate(p.Create(t.End()))).ServeHTTP).Methods("POST")
+	r.HandleFunc("/forums/{id}", l.Log(jwt.Validate(p.Delete(t.End()))).ServeHTTP).Methods("DELETE")
+	r.HandleFunc("/forums/{id}/cancel", l.Log(jwt.Validate(p.Cancel(t.End()))).ServeHTTP).Methods("POST")
 
 	http.Handle("/", r)
 	return &HTTPAdapter{

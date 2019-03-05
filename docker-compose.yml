@@ -1,0 +1,14 @@
+version: '3'
+services:
+  forums:
+    build: .
+    ports:
+      - "9001:8000"
+    restart: always
+    links:
+      - mongodb
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+      - "21018:27018"
